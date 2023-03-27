@@ -8,45 +8,52 @@
         <form
             @submit.prevent="handleConfirm"
             slot-scope="props"
-            class="bg-white rounded-lg shadow-lg overflow-hidden"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden"
         >
             <ModalHeader>
                 {{ __('Restore audit') }}
             </ModalHeader>
 
             <ModalContent>
-                <table class="table w-full mt-4">
-                    <thead>
-                    <th style="max-width: 20px;">
-                        <checkbox
-                            @input="toggleSelectAll"
-                            :checked="allSelected"
-                        />
-                    </th>
-                    <th>
-                        {{__('Field')}}
-                    </th>
-                    <th>
-                        {{__('Current')}}
-                    </th>
-                    <th>
-                        {{__('Restore to')}}
-                    </th>
+                <table class="table w-full rounded-lg overflow-hidden mt-4">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                        <th class="text-left px-2 whitespace-nowrap uppercase text-gray-500 dark:text-gray-400 text-xxs tracking-wide py-2" style="max-width: 20px;">
+                            <checkbox
+                                v-if="comparison?.length > 0"
+                                @input="toggleSelectAll"
+                                :checked="allSelected"
+                            />
+                        </th>
+                        <th class="text-left px-2 whitespace-nowrap uppercase text-gray-500 dark:text-gray-400 text-xxs tracking-wide py-2">
+                            {{__('Field')}}
+                        </th>
+                        <th class="text-left px-2 whitespace-nowrap uppercase text-gray-500 dark:text-gray-400 text-xxs tracking-wide py-2">
+                            {{__('Current')}}
+                        </th>
+                        <th class="text-left px-2 whitespace-nowrap uppercase text-gray-500 dark:text-gray-400 text-xxs tracking-wide py-2">
+                            {{__('Restore to')}}
+                        </th>
                     </thead>
-                    <tbody>
-                    <tr v-for="compare in comparison">
-                        <td style="max-width: 20px;" class="text-center">
-                            <input type="checkbox" class="checkbox" v-model="restoreIds" :value="compare.key" />
-                        </td>
-                        <td>{{compare.label}}</td>
-                        <td class="text-center">{{compare.current}}</td>
-                        <td class="text-center">{{compare.restore}}</td>
-                    </tr>
-                    <tr v-if="comparison.length == 0">
-                        <td colspan="4" class="text-center">
-                            {{__('No changes')}}
-                        </td>
-                    </tr>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <tr v-for="compare in comparison" class="group">
+                            <td style="max-width: 20px;" class="px-2 py-2 whitespace-nowrap dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
+                                <input type="checkbox" class="checkbox" v-model="restoreIds" :value="compare.key" />
+                            </td>
+                            <td class="px-2 py-2 whitespace-nowrap dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
+                                {{compare.label}}
+                            </td>
+                            <td class="px-2 py-2 whitespace-nowrap dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
+                                {{compare.current}}
+                            </td>
+                            <td class="px-2 py-2 whitespace-nowrap dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
+                                {{compare.restore}}
+                            </td>
+                        </tr>
+                        <tr v-if="comparison.length == 0">
+                            <td colspan="4" class="px-2 py-2 whitespace-nowrap text-center dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
+                                {{__('No changes')}}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </ModalContent>
