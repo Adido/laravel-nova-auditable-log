@@ -7,8 +7,8 @@
                     {{ __('Close Audit Log') }}
                 </DefaultButton>
             </div>
-            <div class="card">
-                <table data-testid="resource-table" class="table w-full rounded-lg overflow-hidden shadow">
+            <div class="overflow-hidden overflow-x-auto relative">
+                <table data-testid="resource-table" class="w-full divide-y divide-gray-100 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th></th>
@@ -17,7 +17,7 @@
                         <th class="text-left text-gray-500 dark:text-gray-400 py-2"><span> {{ __('Date/Time') }} </span></th>
                         <th class="text-left text-gray-500 dark:text-gray-400 py-2"><span> {{ __('Old Values') }} </span></th>
                         <th class="text-left text-gray-500 dark:text-gray-400 py-2"><span> {{ __('New Values') }} </span></th>
-                        <th class="text-gray-500 py-2" v-if="canRestore"></th>
+                        <th class="text-gray-500 py-2" style="min-width: 20px;" v-if="canRestore"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,28 +55,44 @@
                         </td>
                         <td class="py-2 border-t border-gray-100 dark:border-gray-800">
                             <div v-for="old_value in formatData(audit.old_values)" class="my-2">
-                                <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ old_value.name }}</span> {{
-                                    old_value.value
-                                }}
+                                <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ old_value.name }}</span>
+
+                                <span
+                                    v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(old_value.name)"
+                                    v-html="old_value.value"
+                                    class="audit-preview-svg"
+                                ></span>
+                                <span v-else>{{ old_value.value }}</span>
                             </div>
                         </td>
                         <td class="py-2 border-t border-gray-100 dark:border-gray-800">
                             <div v-for="new_value in formatData(audit.new_values)" class="my-2">
-                                <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ new_value.name }}</span> {{
-                                    new_value.value
-                                }}
+                                <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ new_value.name }}</span>
+
+                                <span
+                                    v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(new_value.name)"
+                                    v-html="new_value.value"
+                                    class="audit-preview-svg"
+                                ></span>
+                                <span v-else>{{ new_value.value }}</span>
                             </div>
                         </td>
-                        <td class="py-2 text-center border-t border-gray-100 dark:border-gray-800"
-                            v-if="canRestore">
-                            <svg @click="showRestoreAudit(audit)" style="max-width: 20px;"
-                                 xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
-                                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                                 xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                                 xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-                                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 -256 1792 1792"
-                                 id="svg3447" version="1.1" inkscape:version="0.48.3.1 r9886" width="100%" height="100%"
-                                 sodipodi:docname="undo_font_awesome.svg">
+                        <td
+                            class="py-8 text-center border-t border-gray-100 dark:border-gray-800"
+                            v-if="canRestore"
+                        >
+                            <svg
+                                @click="showRestoreAudit(audit)"
+                                class="cursor-pointer w-5 mx-4"
+                                style="max-width: 20px;"
+                                xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
+                                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                                xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 -256 1792 1792"
+                                id="svg3447" version="1.1" inkscape:version="0.48.3.1 r9886" width="100%" height="100%"
+                                sodipodi:docname="undo_font_awesome.svg"
+                            >
                                 <defs id="defs3455"/>
                                 <sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1"
                                                     objecttolerance="10" gridtolerance="10" guidetolerance="10"
@@ -96,25 +112,25 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="bg-20 rounded-b" per-page="5" resource-count-label="1-3 of 3" current-resource-count="3"
-                     all-matching-resource-count="3">
-                    <nav class="flex justify-between items-center">
-                        <button :disabled="pagination.prev_page_url === null" rel="prev" dusk="previous"
-                                class="btn btn-link py-3 px-4 text-80"
-                                :class="{ 'opacity-50': pagination.prev_page_url === null, 'text-primary': pagination.prev_page_url !== null }"
-                                @click="fetchAudits(pagination.prev_page_url)">
-                            {{ __('Previous') }}
-                        </button>
-                        <span class="text-sm text-80 px-4">
-                    {{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }}
-                </span>
-                        <button :disabled="pagination.next_page_url === null" rel="next" dusk="next"
-                                :class="{ 'opacity-50': pagination.next_page_url === null, 'text-primary': pagination.next_page_url !== null }"
-                                class="btn btn-link py-3 px-4 text-80" @click="fetchAudits(pagination.next_page_url)">
-                            {{ __('Next') }}
-                        </button>
-                    </nav>
-                </div>
+            </div>
+            <div class="bg-20 rounded-b" per-page="5" resource-count-label="1-3 of 3" current-resource-count="3"
+                 all-matching-resource-count="3">
+                <nav class="flex justify-between items-center">
+                    <button :disabled="pagination.prev_page_url === null" rel="prev" dusk="previous"
+                            class="btn btn-link py-3 px-4 text-80"
+                            :class="{ 'opacity-50': pagination.prev_page_url === null, 'text-primary': pagination.prev_page_url !== null }"
+                            @click="fetchAudits(pagination.prev_page_url)">
+                        {{ __('Previous') }}
+                    </button>
+                    <span class="text-sm text-80 px-4">
+                        {{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }}
+                    </span>
+                    <button :disabled="pagination.next_page_url === null" rel="next" dusk="next"
+                            :class="{ 'opacity-50': pagination.next_page_url === null, 'text-primary': pagination.next_page_url !== null }"
+                            class="btn btn-link py-3 px-4 text-80" @click="fetchAudits(pagination.next_page_url)">
+                        {{ __('Next') }}
+                    </button>
+                </nav>
             </div>
         </div>
 
@@ -189,11 +205,22 @@ export default {
         },
 
         formatData(values) {
-            let returned = [];
+            let valuesToShow;
+            switch (this.resourceName) {
+                case 'nova-page':
+                    valuesToShow = values.attributes ? JSON.parse(values.attributes) : {};
+                    if (values.title) valuesToShow.seo_title = values.title;
+                    break;
 
-            for (var property in values) {
-                if (values.hasOwnProperty(property)) {
-                    returned.push({name: property, value: values[property]});
+                default:
+                    valuesToShow = values;
+                    break;
+            }
+
+            let returned = [];
+            for (var property in valuesToShow) {
+                if (valuesToShow.hasOwnProperty(property)) {
+                    returned.push({name: property, value: valuesToShow[property]});
                 }
             }
 
@@ -207,6 +234,9 @@ export default {
         restored(updatedProps) {
             // Updates the value of the parent fields
             updatedProps.forEach(prop => {
+                const field = this.parentFields[prop.key];
+                if (! field) return;
+
                 this.parentFields[prop.key].value = prop.value;
             });
 

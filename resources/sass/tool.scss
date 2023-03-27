@@ -1,0 +1,13 @@
+.audit-preview-svg {
+    display: block;
+    width: 100%;
+
+    &.audit-restore-preview {
+        width: 250px;
+    }
+
+    svg {
+        width: 100%;
+        padding: 1rem;
+    }
+}

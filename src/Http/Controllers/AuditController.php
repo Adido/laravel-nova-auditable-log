@@ -43,7 +43,41 @@ class AuditController
 
         $audit = $record->audits()->where($auditor->getTable() . '.' . $auditor->getKeyName(), $auditId)->firstOrFail();
 
-        $record->fill(Arr::only($audit->new_values, $request->input('restore', [])));
+        switch ($resourceName) {
+            case 'nova-page':
+                $toRestore = $request->input('restore', []);
+
+                // restore page title
+                if (in_array('seo_title', $toRestore)) {
+                    $record->title = $audit['new_values']['title'] ?? '';
+
+                    $titleIndex = array_search('seo_title', $toRestore);
+                    unset($toRestore[$titleIndex]);
+                }
+
+                // restore page attributes
+                if ($toRestore) {
+                    $recordAttributes = json_decode($record->attributes, true);
+                    if (! is_array($recordAttributes)) $recordAttributes = [];
+
+                    $newAttributes = json_decode($audit['new_values']['attributes'] ?? '', true);
+                    if (! is_array($newAttributes)) $newAttributes = [];
+
+                    foreach ($toRestore as $field) {
+                        if (! isset($newAttributes[$field])) continue;
+
+                        $recordAttributes[$field] = $newAttributes[$field];
+                    }
+
+                    $record->attributes = json_encode($recordAttributes);
+                }
+                break;
+
+            default:
+                $record->fill(Arr::only($audit->new_values, $request->input('restore', [])));
+                break;
+        }
+
         $record->save();
 
         return response()->json(['status' => 'OK', 'record' => $record]);
@@ -57,9 +91,26 @@ class AuditController
      */
     protected function loadRecord($resourceName, $resourceId)
     {
-        $model = Nova::modelInstanceForKey($resourceName);
-        return method_exists($model, "trashed")
-            ? $model::withTrashed()->find($resourceId)
-            : $model->find($resourceId);
+        switch ($resourceName) {
+            case 'nova-page':
+                abort_if(is_array($resourceId), 404);
+
+                $source = config('novapage.default_source');
+                abort_if($source !== \Whitecube\NovaPage\Sources\Database::class, 404);
+
+                $model = config('novapage.sources.database.model');
+                $name = strtr((string) $resourceId, [
+                    'route.' => '',
+                    'option.' => ''
+                ]);
+                return $model::where('name', '=', $name)
+                    ->firstOrFail();
+
+            default:
+                $model = Nova::modelInstanceForKey($resourceName);
+                return method_exists($model, "trashed")
+                    ? $model::withTrashed()->findOrFail($resourceId)
+                    : $model->findOrFail($resourceId);
+        }
     }
 }
