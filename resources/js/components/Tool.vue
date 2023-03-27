@@ -122,9 +122,13 @@
             {{ __('View Audit Log') }}
         </DefaultButton>
 
-        <restore-audit-modal v-if="restore !== null" :fields="parentFields" :resourceName="resourceName"
+        <portal to="modals">
+            <transition name="fade">
+                <restore-audit-modal v-if="restore !== null" :fields="parentFields" :resourceName="resourceName"
                              :resourceId="resourceId" :audit="restore" @close="restore = null" @restored="restored">
-        </restore-audit-modal>
+                </restore-audit-modal>
+            </transition>
+        </portal>
     </div>
 </template>
 
