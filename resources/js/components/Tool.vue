@@ -2,7 +2,7 @@
     <div>
         <div v-if="displayAudits">
             <div class="flex flex-row items-center justify-between">
-                <h2 class="mb-3 text-90 font-normal text-2xl">{{ __('Audit Log') }}</h2>
+                <h2 class="font-normal text-xl md:text-xl mb-3">{{ __('Audit Log') }}</h2>
                 <DefaultButton class="btn btn-default btn-primary ml-4 mb-2" @click.prevent="close" v-if="displayAudits">
                     {{ __('Close Audit Log') }}
                 </DefaultButton>
