@@ -42,6 +42,11 @@
                                     <path fill="currentColor"
                                           d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path>
                                 </svg>
+                                <svg v-if="audit.event === 'restored'" aria-hidden="true" focusable="false" data-prefix="fas"
+                                     stroke-width="1.5" stroke="currentColor" data-icon="refresh" class="h-5 text-60 svg-inline--fa fa-refresh fa-w-14"
+                                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                     <path fill="none" stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
                             </div>
                         </td>
                         <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
