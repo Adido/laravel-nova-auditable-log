@@ -85,6 +85,7 @@
                         >
                             <svg
                                 @click="showRestoreAudit(audit)"
+                                v-if="audit.event === 'updated'"
                                 class="cursor-pointer w-5 mx-4"
                                 style="max-width: 20px;"
                                 xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
