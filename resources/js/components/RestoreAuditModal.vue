@@ -166,10 +166,10 @@
             comparison() {
                 switch (this.resourceName) {
                     case 'nova-page':
-                        const pageValues = this.audit.new_values.attributes ?
-                            JSON.parse(this.audit.new_values.attributes) :
+                        const pageValues = this.audit.old_values.attributes ?
+                            JSON.parse(this.audit.old_values.attributes) :
                             {};
-                        if (this.audit.new_values?.title) pageValues.seo_title = this.audit.new_values.title;
+                        if (this.audit.old_values?.title) pageValues.seo_title = this.audit.old_values.title;
 
                         return Object.keys(pageValues).map((key) => {
                             return  {
@@ -181,7 +181,7 @@
                         });
 
                     default:
-                        return Object.keys(this.audit.new_values).map(key => {
+                        return Object.keys(this.audit.old_values).map(key => {
                             let fieldKey = key;
 
                             // handle edge cases where computed fields are displayed on the detail view
@@ -196,13 +196,13 @@
                             }
 
                             if (typeof this.fields[fieldKey] == 'undefined') return null;
-                            if(this.fields[fieldKey].value == this.audit.new_values[key]) return null;
+                            if(this.fields[fieldKey].value == this.audit.old_values[key]) return null;
 
                             return  {
                                 key,
                                 label: this.fields[fieldKey].label,
                                 current: this.fields[fieldKey].value,
-                                restore: this.audit.new_values[key]
+                                restore: this.audit.old_values[key]
                             }
                         }).filter(field => field !== null);
 

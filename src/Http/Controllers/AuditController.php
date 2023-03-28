@@ -49,7 +49,7 @@ class AuditController
 
                 // restore page title
                 if (in_array('seo_title', $toRestore)) {
-                    $record->title = $audit['new_values']['title'] ?? '';
+                    $record->title = $audit['old_values']['title'] ?? '';
 
                     $titleIndex = array_search('seo_title', $toRestore);
                     unset($toRestore[$titleIndex]);
@@ -60,7 +60,7 @@ class AuditController
                     $recordAttributes = json_decode($record->attributes, true);
                     if (! is_array($recordAttributes)) $recordAttributes = [];
 
-                    $newAttributes = json_decode($audit['new_values']['attributes'] ?? '', true);
+                    $newAttributes = json_decode($audit['old_values']['attributes'] ?? '', true);
                     if (! is_array($newAttributes)) $newAttributes = [];
 
                     foreach ($toRestore as $field) {
@@ -74,7 +74,7 @@ class AuditController
                 break;
 
             default:
-                $record->fill(Arr::only($audit->new_values, $request->input('restore', [])));
+                $record->fill(Arr::only($audit->old_values, $request->input('restore', [])));
                 break;
         }
 
