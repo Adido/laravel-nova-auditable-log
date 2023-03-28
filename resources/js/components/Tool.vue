@@ -22,7 +22,7 @@
                     </thead>
                     <tbody>
                     <tr class="group bg-white dark:bg-gray-800" v-for="audit in audits">
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             <div class="px-4">
                                 <svg v-if="audit.event === 'created'" aria-hidden="true" focusable="false" data-prefix="fas"
                                      data-icon="save" class="h-4 text-60 svg-inline--fa fa-save fa-w-14" role="img"
@@ -44,16 +44,16 @@
                                 </svg>
                             </div>
                         </td>
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             {{ audit.user ? audit.user.name : __('console') }}
                         </td>
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             {{ audit.event }}
                         </td>
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             {{ audit.created_at }}
                         </td>
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             <div v-for="old_value in formatData(audit.old_values)" class="my-2">
                                 <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ old_value.name }}</span>
 
@@ -61,11 +61,12 @@
                                     v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(old_value.name)"
                                     v-html="old_value.value"
                                     class="audit-preview-svg"
+                                    :style="{'background-color': old_value.name === 'logo' ? this.parentFields?.color?.value : 'transparent'}"
                                 ></span>
                                 <span v-else>{{ old_value.value }}</span>
                             </div>
                         </td>
-                        <td class="py-2 border-t border-gray-100 dark:border-gray-800">
+                        <td class="py-2 border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900">
                             <div v-for="new_value in formatData(audit.new_values)" class="my-2">
                                 <span class="inline-block bg-30 p-1 rounded-sm mr-2 font-bold">{{ new_value.name }}</span>
 
@@ -73,12 +74,13 @@
                                     v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(new_value.name)"
                                     v-html="new_value.value"
                                     class="audit-preview-svg"
+                                    :style="{'background-color': new_value.name === 'logo' ? this.parentFields?.color?.value : 'transparent'}"
                                 ></span>
                                 <span v-else>{{ new_value.value }}</span>
                             </div>
                         </td>
                         <td
-                            class="py-8 text-center border-t border-gray-100 dark:border-gray-800"
+                            class="py-8 text-center border-t border-gray-100 dark:border-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                             v-if="canRestore"
                         >
                             <svg

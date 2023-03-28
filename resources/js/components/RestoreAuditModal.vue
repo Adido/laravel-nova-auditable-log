@@ -54,6 +54,7 @@
                                         v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(compare.key)"
                                         v-html="compare.current"
                                         :class="{'audit-preview-svg audit-restore-preview': ['svg','mobile_svg','desktop_svg','logo','code'].includes(compare.key)}"
+                                        :style="{'background-color': this.fields?.color?.value || 'transparent'}"
                                     ></span>
                                     <span v-else>{{ compare.current }}</span>
                                 </td>
@@ -62,6 +63,7 @@
                                     v-if="['svg','mobile_svg','desktop_svg','logo','code','subtitle','content','terms'].includes(compare.key)"
                                         v-html="compare.restore"
                                         :class="{'audit-preview-svg audit-restore-preview': ['svg','mobile_svg','desktop_svg','logo','code'].includes(compare.key)}"
+                                        :style="{'background-color': this.fields?.color?.value || 'transparent'}"
                                     ></span>
                                     <span v-else>{{ compare.restore }}</span>
                                 </td>
@@ -172,7 +174,7 @@
                         if (this.audit.old_values?.title) pageValues.seo_title = this.audit.old_values.title;
 
                         return Object.keys(pageValues).map((key) => {
-                            return  {
+                            return {
                                 key,
                                 label: key,
                                 current: '',
@@ -187,18 +189,24 @@
                             // handle edge cases where computed fields are displayed on the detail view
                             switch (this.audit.auditable_type) {
                                 case 'App\\Models\\Offer':
-                                    if(key === 'code') fieldKey = 'ComputedField';
-                                    break;
-
-                                case 'App\\Models\\Retailer':
-                                    if(key === 'logo') fieldKey = 'ComputedField';
+                                    switch (key) {
+                                        case 'code':
+                                            fieldKey = 'ComputedField';
+                                            break;
+                                        case 'retailer_id':
+                                            fieldKey = '';
+                                            break;
+                                        case 'location_id':
+                                            fieldKey = 'location';
+                                            break;
+                                    }
                                     break;
                             }
 
                             if (typeof this.fields[fieldKey] == 'undefined') return null;
                             if(this.fields[fieldKey].value == this.audit.old_values[key]) return null;
 
-                            return  {
+                            return {
                                 key,
                                 label: this.fields[fieldKey].label,
                                 current: this.fields[fieldKey].value,
